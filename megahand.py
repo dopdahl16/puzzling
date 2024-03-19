@@ -132,10 +132,11 @@ for suit in suits:
 
 
 # Code block to randomly draw a cut card and a hand from a 52 card deck
+        
 # cut_card = random.choice(deck)
 # deck.remove(cut_card)
 
-# for i in range(4):
+# for i in range(6):
 #     card = random.choice(deck)
 #     hand.append(card)
 #     deck.remove(card)
@@ -143,8 +144,11 @@ for suit in suits:
 # scoreHand(hand, cut_card)
 
         
-# Code block to determine highest scoring normal hand and cut card
+# Code block to determine highest scoring MEGA hand and cut card
+        
 all_scores = []
+highest_score = 0
+highest_scoring_hands = []
 hands_seen = set()
 indicies_of_cards_in_play = set()
 for cut_card_index in range(len(deck)):
@@ -166,16 +170,39 @@ for cut_card_index in range(len(deck)):
                                 if card4_index not in indicies_of_cards_in_play:
                                     indicies_of_cards_in_play.add(card4_index)
 
-                                    if indicies_of_cards_in_play not in hands_seen:
+                                    for card5_index in range(len(deck)):
+                                        if card5_index not in indicies_of_cards_in_play:
+                                            indicies_of_cards_in_play.add(card5_index)
 
-                                        hand = [deck[card1_index],deck[card2_index],deck[card3_index],deck[card4_index]]
-                                        cut_card = deck[cut_card_index]
-                                        # print(cut_card, hand)
-                                        # print(len(hands_seen))
+                                            for card6_index in range(len(deck)):
+                                                if card6_index not in indicies_of_cards_in_play:
+                                                    indicies_of_cards_in_play.add(card6_index)
 
-                                        all_scores.append(scoreHand(hand, cut_card))
 
-                                        hands_seen.add(frozenset(indicies_of_cards_in_play))
+                                                    if indicies_of_cards_in_play not in hands_seen:
+
+                                                        hand = [deck[card1_index],deck[card2_index],deck[card3_index],deck[card4_index],deck[card5_index],deck[card6_index]]
+                                                        cut_card = deck[cut_card_index]
+                                                        # print(cut_card, hand)
+                                                        # print(len(hands_seen))
+                                                        score = scoreHand(hand, cut_card)
+
+                                                        if score == highest_score:
+                                                            highest_scoring_hands.append(frozenset(hand + [cut_card]))
+
+                                                        if score > highest_score:
+                                                            highest_score = score
+                                                            highest_scoring_hands = [frozenset(hand + [cut_card])]
+
+
+                                                        all_scores.append(score)
+
+                                                        hands_seen.add(frozenset(indicies_of_cards_in_play))
+
+
+                                                    indicies_of_cards_in_play.remove(card6_index)
+
+                                            indicies_of_cards_in_play.remove(card5_index)
 
                                     indicies_of_cards_in_play.remove(card4_index)
 
