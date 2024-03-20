@@ -218,3 +218,6 @@ for cut_card_index in range(len(deck)):
     
 print(max(all_scores))
 print()
+
+# As it currently is, this program will run for megahand, but I am encountering what appears to be memory errors and definitely speed errors. 
+# In order to solve this, I am rewriting the program using combi, a python library for combinatorics, which will hopefully improve performance
