@@ -1,4 +1,5 @@
 from enum import *
+from itertools import combinations
 import random
 
 class Card:
@@ -9,9 +10,8 @@ class Card:
         return self.suit + " " + self.value
 
 
-def scoreHand(hand, cut_card):
+def scoreHand(cards):
     total_points = 0
-    cards = hand + [cut_card]
     combos = generateSets(cards)
     total_points += countFifteens(combos)
     total_points += countPairs(combos)
@@ -149,75 +149,21 @@ for suit in suits:
 all_scores = []
 highest_score = 0
 highest_scoring_hands = []
-hands_seen = set()
-indicies_of_cards_in_play = set()
-for cut_card_index in range(len(deck)):
-    indicies_of_cards_in_play.add(cut_card_index)
 
-    for card1_index in range(len(deck)):
-        if card1_index not in indicies_of_cards_in_play:
-            indicies_of_cards_in_play.add(card1_index)
+all_hands = combinations(deck, 7)
 
-            for card2_index in range(len(deck)):
-                if card2_index not in indicies_of_cards_in_play:
-                    indicies_of_cards_in_play.add(card2_index)
+for hand in all_hands:
+    score = scoreHand(hand)
 
-                    for card3_index in range(len(deck)):
-                        if card3_index not in indicies_of_cards_in_play:
-                            indicies_of_cards_in_play.add(card3_index)
+    if score == highest_score:
+        highest_scoring_hands.append(hand)
 
-                            for card4_index in range(len(deck)):
-                                if card4_index not in indicies_of_cards_in_play:
-                                    indicies_of_cards_in_play.add(card4_index)
+    if score > highest_score:
+        highest_score = score
+        highest_scoring_hands = [hand]
 
-                                    for card5_index in range(len(deck)):
-                                        if card5_index not in indicies_of_cards_in_play:
-                                            indicies_of_cards_in_play.add(card5_index)
+    all_scores.append(score)
 
-                                            for card6_index in range(len(deck)):
-                                                if card6_index not in indicies_of_cards_in_play:
-                                                    indicies_of_cards_in_play.add(card6_index)
-
-
-                                                    if indicies_of_cards_in_play not in hands_seen:
-
-                                                        hand = [deck[card1_index],deck[card2_index],deck[card3_index],deck[card4_index],deck[card5_index],deck[card6_index]]
-                                                        cut_card = deck[cut_card_index]
-                                                        # print(cut_card, hand)
-                                                        # print(len(hands_seen))
-                                                        score = scoreHand(hand, cut_card)
-
-                                                        if score == highest_score:
-                                                            highest_scoring_hands.append(frozenset(hand + [cut_card]))
-
-                                                        if score > highest_score:
-                                                            highest_score = score
-                                                            highest_scoring_hands = [frozenset(hand + [cut_card])]
-
-
-                                                        all_scores.append(score)
-
-                                                        hands_seen.add(frozenset(indicies_of_cards_in_play))
-
-
-                                                    indicies_of_cards_in_play.remove(card6_index)
-
-                                            indicies_of_cards_in_play.remove(card5_index)
-
-                                    indicies_of_cards_in_play.remove(card4_index)
-
-                            indicies_of_cards_in_play.remove(card3_index)
-
-                    indicies_of_cards_in_play.remove(card2_index)
-
-            indicies_of_cards_in_play.remove(card1_index)
-
-    indicies_of_cards_in_play.remove(cut_card_index)
-    print("new cut card")
-    print(cut_card)
     
 print(max(all_scores))
 print()
-
-# As it currently is, this program will run for megahand, but I am encountering what appears to be memory errors and definitely speed errors. 
-# In order to solve this, I am rewriting the program using combi, a python library for combinatorics, which will hopefully improve performance
