@@ -1,6 +1,5 @@
 from enum import *
 from itertools import combinations
-import random
 
 class Card:
     def __init__(self, suit, value):
@@ -131,22 +130,7 @@ for suit in suits:
         deck.append(Card(suit, name))
 
 
-# Code block to randomly draw a cut card and a hand from a 52 card deck
-        
-# cut_card = random.choice(deck)
-# deck.remove(cut_card)
-
-# for i in range(6):
-#     card = random.choice(deck)
-#     hand.append(card)
-#     deck.remove(card)
-        
-# scoreHand(hand, cut_card)
-
-        
-# Code block to determine highest scoring MEGA hand and cut card
-        
-all_scores = []
+all_scores = {}
 highest_score = 0
 highest_scoring_hands = []
 
@@ -154,16 +138,13 @@ all_hands = combinations(deck, 7)
 
 for hand in all_hands:
     score = scoreHand(hand)
+    if score in all_scores:
+        all_scores[score].append(hand)
+    else:
+        all_scores[score] = [hand]
 
-    if score == highest_score:
-        highest_scoring_hands.append(hand)
-
-    if score > highest_score:
-        highest_score = score
-        highest_scoring_hands = [hand]
-
-    all_scores.append(score)
-
+with open('mega-hand-scores.txt', 'w') as file:
+     for key, value in all_scores.items():
+        file.write('%s:%s\n' % (key, value))
     
-print(max(all_scores))
 print()
