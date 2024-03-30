@@ -143,8 +143,9 @@ for hand in all_hands:
     else:
         all_scores[score] = [hand]
 
-with open('mega-hand-scores.txt', 'w') as file:
-     for key, value in all_scores.items():
-        file.write('%s:%s\n' % (key, value))
-    
-print()
+    file = open("mega-hand-scores.txt", 'a')
+    file.write(str(score) + " " + str(hand))
+    file.write('\n')
+    file.close()
+
+print("Done")
